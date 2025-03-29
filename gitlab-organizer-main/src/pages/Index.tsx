@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,9 @@ const Index: React.FC = () => {
           </Button>
           <Button size="lg" variant="outline" onClick={() => window.open('https://gitlab.com', '_blank')}>
             Visit GitLab
+          </Button>
+          <Button size="lg" variant="outline" onClick={() => navigate('/gitlab-demo')}>
+            Test Cases Demo
           </Button>
         </div>
       </div>
