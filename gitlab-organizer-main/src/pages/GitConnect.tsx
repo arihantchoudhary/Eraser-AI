@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import GitLabSettings from '@/components/GitLabSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,7 +23,7 @@ import GitlabImport from '@/components/GitlabImport';
 const GitConnect: React.FC = () => {
   const { organizations, repositories, activeOrg, addOrganization, addRepository, updateRepositoryStatus, saveAccessToken } = useGitlab();
   const [showConnectDialog, setShowConnectDialog] = useState(false);
-  const [showTokenDialog, setShowTokenDialog] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [organizationName, setOrganizationName] = useState('');
   const [organizationUrl, setOrganizationUrl] = useState('');
@@ -59,20 +60,6 @@ const GitConnect: React.FC = () => {
     setOrganizationUrl('');
   };
 
-  const handleSaveToken = () => {
-    if (!accessToken || !activeOrg) {
-      toast({
-        title: "Validation Error",
-        description: "Access token is required and an organization must be selected",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    saveAccessToken(activeOrg.id, accessToken);
-    setShowTokenDialog(false);
-    setAccessToken('');
-  };
 
   const handleAddRepositories = () => {
     if (!selectedRepos.length || !activeOrg) {
@@ -156,7 +143,7 @@ const GitConnect: React.FC = () => {
                       size="sm"
                       onClick={() => {
                         useGitlab().setActiveOrganization(org);
-                        setShowTokenDialog(true);
+                        setShowSettings(true);
                       }}
                     >
                       Configure
@@ -330,37 +317,10 @@ const GitConnect: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Token Dialog */}
-      <Dialog open={showTokenDialog} onOpenChange={setShowTokenDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>GitLab Connect</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-gray-600 mb-4">
-              Get an API access token from <a href="https://gitlab.com/-/profile/personal_access_tokens" target="_blank" rel="noopener noreferrer" className="text-blue-500">GitLab personal access tokens</a> page. The token requires API scope.
-            </p>
-            <div className="grid gap-2">
-              <Label htmlFor="token">Paste API access token</Label>
-              <Input 
-                id="token" 
-                type="password"
-                value={accessToken}
-                onChange={(e) => setAccessToken(e.target.value)}
-                placeholder="Paste your GitLab API token here" 
-              />
-            </div>
-          </div>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setShowTokenDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveToken}>
-              Save
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Settings Component */}
+      {showSettings && (
+        <GitLabSettings onClose={() => setShowSettings(false)} />
+      )}
     </div>
   );
 };
