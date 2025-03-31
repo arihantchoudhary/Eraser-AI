@@ -1,39 +1,51 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
 
-export function GitLabConnect() {
+interface GitLabConnectProps {
+  initialToken?: string;
+}
+
+export function GitLabConnect({ initialToken = "" }: GitLabConnectProps) {
+  const [token, setToken] = useState(initialToken || "glpat-EcsmmJ_ZQxFBxCDdwVFA");
+  const [savedToken, setSavedToken] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSave = () => {
+    // Save token logic, e.g., call an API to validate token
+    // For now just simulate saving.
+    setSavedToken(token);
+    setMessage("Token saved successfully.");
+  };
+
+  const handleCancel = () => {
+    // Reset token to the previously saved token
+    setToken(savedToken);
+    setMessage("Changes cancelled.");
+  };
+
   return (
-    <div className="max-w-2xl">
-      <h2 className="text-2xl font-medium mb-4">GitLab Connect</h2>
-
-      <p className="mb-6 text-gray-700 text-sm">
-        Get an API access token from{" "}
-        <a href="#" className="text-blue-500 hover:underline">
-          user settings
-        </a>
-        , group settings, or project settings. The token requires API scope.
+    <div className="p-4">
+      <h2 className="text-lg font-semibold mb-3">GitLab Connect</h2>
+      <p className="mb-2">
+        Get an API access token from user settings, group settings, or project settings. The token requires API scope.
       </p>
-
-      <div className="mb-6">
-        <Input
-          placeholder="Paste API access token"
-          className="w-full mb-4 h-10 text-sm"
-        />
-      </div>
-
+      <input
+        type="text"
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        className="border rounded p-2 w-full mb-3"
+        placeholder="Enter your GitLab API token"
+      />
       <div className="flex gap-2">
-        <Button
-          variant="outline"
-          className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-        >
+        <button onClick={handleCancel} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">
           Cancel
-        </Button>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        </button>
+        <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded">
           Save
-        </Button>
+        </button>
       </div>
+      {message && <p className="mt-3 text-sm text-green-600">{message}</p>}
     </div>
   );
 }
